@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% from "_macros.html" import post, composer %}
+{% block content %}
+{{ composer() }}
+{% for p in posts %}{{ post(p) }}
+{% else %}
+<p class="empty">Nothing here yet. Write your first post, or <a href="{{ url_for('people') }}">find people to follow</a>.</p>
+{% endfor %}
+{% endblock %}

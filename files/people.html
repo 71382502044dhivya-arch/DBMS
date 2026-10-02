@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% from "_macros.html" import person %}
+{% block content %}
+<form class="search" method="get">
+  <input name="q" value="{{ term }}" placeholder="Search by name or username" autofocus>
+  <button class="btn">Search</button>
+</form>
+{% for u in users %}{{ person(u, u.rel) }}
+{% else %}<p class="empty">{{ 'No one matches that search.' if term else 'Search for a name or username to find people.' }}</p>{% endfor %}
+{% endblock %}

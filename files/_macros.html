@@ -1,0 +1,49 @@
+{% macro avatar(u, size='') %}
+  {% if u.avatar_url %}<img class="avatar {{ size }}" src="{{ u.avatar_url }}" alt="">
+  {% else %}<span class="avatar {{ size }}">{{ u.display_name[:1]|upper }}</span>{% endif %}
+{% endmacro %}
+
+{% macro post(p) %}
+<article class="post">
+  {{ avatar(p) }}
+  <div class="post-main">
+    <div class="meta"><a href="{{ url_for('profile', username=p.username) }}"><strong>{{ p.display_name }}</strong> @{{ p.username }}</a>
+      <time>{{ p.created_at.strftime('%d %b, %H:%M') }}</time></div>
+    <p>{{ p.body }}</p>
+    <div class="actions">
+      <button class="like {{ 'on' if p.liked }}" data-like="{{ p.id }}" aria-pressed="{{ 'true' if p.liked else 'false' }}">
+        <span class="label">{{ 'Liked' if p.liked else 'Like' }}</span> <span class="count">{{ p.likes }}</span></button>
+      {% if p.user_id == g.user.id %}
+      <form method="post" action="{{ url_for('delete_post', pid=p.id) }}" onsubmit="return confirm('Delete this post?')">
+        <button class="link danger">Delete</button></form>
+      {% endif %}
+    </div>
+  </div>
+</article>
+{% endmacro %}
+
+{% macro friend_button(uid, rel) %}
+  {% if rel == 'none' %}<button class="btn" data-friend="{{ uid }}" data-action="request">Add friend</button>
+  {% elif rel == 'sent' %}<button class="btn ghost" data-friend="{{ uid }}" data-action="cancel">Cancel request</button>
+  {% elif rel == 'received' %}
+    <button class="btn" data-friend="{{ uid }}" data-action="accept">Accept</button>
+    <button class="btn ghost" data-friend="{{ uid }}" data-action="decline">Decline</button>
+  {% elif rel == 'friends' %}<button class="btn ghost" data-friend="{{ uid }}" data-action="remove" data-confirm="Remove this friend?">Remove friend</button>
+  {% endif %}
+{% endmacro %}
+
+{% macro person(u, rel) %}
+<div class="person">
+  {{ avatar(u) }}
+  <div class="grow"><a href="{{ url_for('profile', username=u.username) }}"><strong>{{ u.display_name }}</strong> @{{ u.username }}</a>
+    <p class="muted">{{ u.bio }}</p></div>
+  {{ friend_button(u.id, rel) }}
+</div>
+{% endmacro %}
+
+{% macro composer() %}
+<form class="composer" method="post" action="{{ url_for('create_post') }}">
+  <textarea name="body" maxlength="500" rows="3" placeholder="What's happening?" required></textarea>
+  <div><span class="muted" data-counter>0/500</span> <button class="btn">Post</button></div>
+</form>
+{% endmacro %}

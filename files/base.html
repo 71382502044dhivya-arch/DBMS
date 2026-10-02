@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Loop{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+{% if g.user %}
+<header class="top">
+  <a class="brand" href="{{ url_for('feed') }}">Loop</a>
+  <nav>
+    <a href="{{ url_for('feed') }}">Feed</a>
+    <a href="{{ url_for('people') }}">Find people</a>
+    <a href="{{ url_for('friends') }}">Friends</a>
+    <a href="{{ url_for('profile', username=g.user.username) }}">Profile</a>
+    <form method="post" action="{{ url_for('logout') }}"><button class="link">Log out</button></form>
+  </nav>
+</header>
+{% endif %}
+<main>
+  {% for m in get_flashed_messages() %}<p class="flash" role="alert">{{ m }}</p>{% endfor %}
+  {% block content %}{% endblock %}
+</main>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
