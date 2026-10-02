@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% from "_macros.html" import person %}
+{% block content %}
+{% if incoming %}<h2>Requests for you</h2>{% for u in incoming %}{{ person(u, 'received') }}{% endfor %}{% endif %}
+<h2>Friends ({{ friends|length }})</h2>
+{% for u in friends %}{{ person(u, 'friends') }}
+{% else %}<p class="empty">No friends yet. <a href="{{ url_for('people') }}">Find people</a>.</p>{% endfor %}
+{% if outgoing %}<h2>Sent requests</h2>{% for u in outgoing %}{{ person(u, 'sent') }}{% endfor %}{% endif %}
+{% endblock %}

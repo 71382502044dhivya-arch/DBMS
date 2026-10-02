@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Create account' if mode == 'register' else 'Log in' }} · Loop{% endblock %}
+{% block content %}
+<section class="auth">
+  <h1>Loop</h1>
+  <p class="muted">Keep up with the people you actually know.</p>
+  <form method="post">
+    {% if mode == 'register' %}
+      <label>Display name <input name="display_name" maxlength="60"></label>
+      <label>Email <input type="email" name="email" required></label>
+    {% endif %}
+    <label>Username <input name="username" required autocomplete="username"></label>
+    <label>Password <input type="password" name="password" required minlength="{{ 8 if mode == 'register' else 1 }}" autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}"></label>
+    <button class="btn wide">{{ 'Create account' if mode == 'register' else 'Log in' }}</button>
+  </form>
+  <p class="muted">{% if mode == 'register' %}Have an account? <a href="{{ url_for('login') }}">Log in</a>
+  {% else %}New here? <a href="{{ url_for('register') }}">Create an account</a>{% endif %}</p>
+</section>
+{% endblock %}
